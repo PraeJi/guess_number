@@ -7,27 +7,32 @@ void main(){
   var game = Game();
 
   int result = 0;
+  print('╔════════════════════════════════════════════');
+  print('║             GUESS THE NUMBER           ');
+  print('╟────────────────────────────────────────────');
   do{
-    stdout.write('Please guess the number between 1 and 100 : ');   //print แบบไม่ขึ้นบรรทัดใหม่
+    stdout.write('║ Guess the number between 1 and 100 : ');   //print แบบไม่ขึ้นบรรทัดใหม่
     var input = stdin.readLineSync();
-    var guess = int.tryParse(input!)!;
+    var guess = int.tryParse(input!);
     if(guess == null){
-      print('enter number only');
       continue;
     }
 
     result = game.doGuess(guess);
   } while(result != 1);
+  print('║                 THE END              ');
+  print('╚════════════════════════════════════════════');
 
-  //ถามผูุ้เล่นว่าจะเล่นอีกหรือไม่
+  //ถามผู้เล่นว่าเล่นอีกหรือไม่
+  /*
   stdout.write('Do you want to play again? : ');
   var input = stdin.readLineSync();
-  if(input == 'No'){
-    print('End Game.');
-  } else if(input == 'Yes'){
+  if(input == 'Yes'){
     main();
+  }else if(input == 'No'){
+    print('End Game.');
   }
-
+   */
 
 }
 //การบ้าน ถามผู้เล่นว่าต้องการจะเล่นอีกมั้ย ถ้าเล่นอีกให้พิมพ์เลขต่อ ถ้าไม่ ให้จบเกม
