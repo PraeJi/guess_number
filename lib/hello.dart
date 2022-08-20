@@ -1,55 +1,68 @@
+// ignore_for_file: avoid_print
 
-  //เกมทายเลข
 import 'dart:io';
-//import 'package:flutter/material.dart';
-import 'package:guess_number/game.dart';
+import 'game.dart';
 
 void main() {
-  var game;
-  var b = 0;
-  stdout.write('Enter the maximum number to random : ');
-  var input = stdin.readLineSync();
-  var f = int.tryParse(input!);
-  if (f == null) {
-    game = Game(maxRandom: 100);
-    b = 100;
-  }
-  else{
-    game = Game(maxRandom: f);
-    b = f;
+  while (true) {
+    playGame();
+    String? input;
+
+    do {
+      stdout.write('Play again? (Y/N): ');
+      input = stdin.readLineSync();
+    } while (input!.toLowerCase() != 'y' && input.toLowerCase() != 'n');
+
+    if (input.toLowerCase() == 'n') break;
   }
 
-  int result = 0;
-  print('╔════════════════════════════════════════════');
-  print('║             GUESS THE NUMBER           ');
-  print('╟────────────────────────────────────────────');
+  print('\n\nYou\'ve played ${Game.guessCountList.length} games');
+  for (var i = 0; i < Game.guessCountList.length; i++) {
+    print('🚀 Game #${i + 1}: ${Game.guessCountList[i]} guesses');
+  }
+}
+
+void playGame() {
+  int? max;
   do {
-    stdout.write('║ Guess the number between 1 and $b : '); //print แบบไม่ขึ้นบรรทัดใหม่
-    var input2 = stdin.readLineSync();
-    var guess = int.tryParse(input2!);
+    stdout.write('\nEnter a maximum number to random: ');
+    var input = stdin.readLineSync();
+    max = int.tryParse(input!);
+  } while (max == null);
+
+  var game = Game(maxRandom: max);
+  var isCorrect = false;
+
+  print('');
+  print('╔════════════════════════════════════════');
+  print('║            GUESS THE NUMBER            ');
+  print('╟────────────────────────────────────────');
+
+  do {
+    stdout.write('║ Guess the number between 1 and $max: ');
+    var input = stdin.readLineSync();
+    var guess = int.tryParse(input!);
     if (guess == null) {
       continue;
     }
 
-    result = game.doGuess(guess);
+    var result = game.doGuess(guess);
 
-  } while (result == 0);
-  print('║                 THE END              ');
-  print('╚════════════════════════════════════════════');
-
-  //ถามผู้เล่นว่าเล่นอีกหรือไม่
-  int r = 0;
-  do{
-    stdout.write('Play again? (Y/N): ');
-    var ask = stdin.readLineSync();
-    if(ask == 'y' || ask == 'Y'){
-      main();
-    }else if(ask == 'n' || ask == 'N'){
-      r = 1;
-      print('end');
-    }else if (ask != 'y' && ask != 'Y' && ask != 'n' && ask != 'N') {
-      continue;
+    if (result == Result.tooHigh) {
+      print('║ ➜ $guess is TOO HIGH! ▲');
+      print('╟────────────────────────────────────────');
+    } else if (result == Result.tooLow) {
+      print('║ ➜ $guess is TOO LOW! ▼');
+      print('╟────────────────────────────────────────');
+    } else if (result == Result.correct) {
+      print('║ ➜ $guess is CORRECT ❤, total guesses: ${game.guessCount}');
+      print('╟────────────────────────────────────────');
+      isCorrect = true;
+      //Game.guessCountList.add(game.guessCount);
+      game.addCountList();
     }
-  }while(r != 1);
+  } while (!isCorrect);
 
+  print('║                 THE END                ');
+  print('╚════════════════════════════════════════');
 }

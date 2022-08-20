@@ -1,37 +1,39 @@
-//import 'dart:io';
 import 'dart:math';
 
-//import 'hello.dart';
+enum Result {
+  tooHigh,
+  tooLow,
+  correct
+}
 
-class Game{        //ชื่อ class ใช้ตัวพิมพ์ใหญ่ตัวแรกเท่านั้น
-  int answer = 0;  //instance field
-  int count = 0;
-  List<int> myList = [];
+class Game {
+  static const defaultMaxRandom = 100;
+  int? _answer;
+  int _guessCount = 0;
+  static final List<int> guessCountList = [];
 
-  Game({int? maxRandom}){
+  Game({int maxRandom = defaultMaxRandom}) {
     var r = Random();
-    answer = r.nextInt(maxRandom!) + 1;   //สุ่มเลขตั้งแต่ 1-100
-    print('คำตอบคือ $answer');
+    _answer = r.nextInt(maxRandom) + 1;
+    print('The answer is $_answer');
   }
 
-  int doGuess(int num){        //method
-    if(num > answer){
-      print('║ ➜ $num is TOO HIGH! ▲');
-      print('╟────────────────────────────────────────────');
-      count++;
-      return 0;
-    } else if(num < answer){
-      print('║ ➜ $num is TOO LOW! ▼');
-      print('╟────────────────────────────────────────────');
-      count++;
-      return 0;
-    } else{
-      count++;
-      myList.add(count);
-      print('║ ➜ $num is CORRECT ❤, Total guesses : $count');
-      print('╟────────────────────────────────────────────');
-      return 1;
+  int get guessCount {
+    return _guessCount;
+  }
+
+  void addCountList() {
+    guessCountList.add(_guessCount);
+  }
+
+  Result doGuess(int num) {
+    _guessCount++;
+    if (num > _answer!) {
+      return Result.tooHigh;
+    } else if (num < _answer!) {
+      return Result.tooLow;
+    } else {
+      return Result.correct;
     }
   }
-
 }
